@@ -1,4 +1,5 @@
 import time
+from resources.Calculations.math_utils import *
 
 
 class PID:
@@ -8,7 +9,7 @@ class PID:
 
     def __init__(self, p=0, i=0, d=0, **kwargs):
 
-        self._get_time = kwargs.pop('get_time', None) or time.time()
+        self._get_time = kwargs.pop('get_time', None) or time.time
 
         # initialze gains
         self.Kp = p
@@ -74,8 +75,43 @@ class PID:
 
 
 class Feedforward:
-    pass
+    def __init__(self, ks, kv, ka=0):
+        self.ks, self.kv, self.ka = ks, kv, ka
+
+    def __call__(self, vel, acc=0):
+        return self.ks + vel*self.kv + acc*self.ka  # i have no evidence this works
 
 
-class ArcadeDrive:
+class DriveController:
+    def __init__(self, left_control, right_control):
+        pass
+
+    def arcade_drive(self, speed, rotation, square_inputs=True):
+        if square_inputs:
+            speed = apply_sign(speed**2, speed)  # square while perserving sign
+            rotation = apply_sign(rotation**2, rotation)
+
+        max_input = apply_sign(max(abs(speed), abs(rotation)), speed)
+
+        if speed >= 0:  # todo: Check if this is valid
+            if rotation >= 0:
+                left_speed = max_input
+                right_speed = speed - rotation
+            else:
+                left_speed = speed + rotation
+                right_speed = max_input
+        else:
+            if rotation >= 0:
+                left_speed = speed + rotation
+                right_speed = max_input
+            else:
+                left_speed = max_input
+                right_speed = speed - rotation
+        # todo implement motor control set
+
+    def tank_drive(self, left_speed, right_speed):
+        pass
+
+
+class Ramsete:  # https://github.com/wpilibsuite/allwpilib/blob/master/wpilibNewCommands/src/main/java/edu/wpi/first/wpilibj2/command/RamseteCommand.java
     pass
