@@ -1,15 +1,29 @@
 import socket, threading, pickle  #, jpysocket
+import constants
 
 
 class Messenger:
+    '''
+    Python -> Java socket wrapper
+    Protocol:
+    All messages be a dictionary / HashMap with an entry being "id"
+
+    Controller info:
+    -id=Controller{n} (ie Controller1) -> input name, new input value
+    Dashboard:
+    -id=DashboardCreate -> unit name, [unit type, unit location info]  # todo: check this
+    -id=DashboardUpdate -> name, value
+    Serial:
+    -id=msg -> "value", string message
+    '''
     _key = dict()
 
     def __init__(self):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
-            self.host("localhost", 1235)
+            self.host(constants.IP, constants.PORT)
         except Exception as e:
-            print("Error:", e)
+            print("Connection Error:", e)
 
     def host(self, ip, port):
         self.socket.bind((ip, port))
@@ -71,18 +85,4 @@ if __name__ == "__main__":
         m.send({"msg": message})
     m.close()
 
-
-'''
-Protocol:
-All messages be a dictionary / HashMap with an entry being "id"
-
-Controller info: 
--id=Controller{n} (ie Controller1) -> input name, new input value
-Dashboard:
--id=DashboardCreate -> unit name, [unit type, unit location info]  # todo: check this
--id=DashboardUpdate -> name, value 
-Serial:
--id=msg -> "value", string message
-
-'''
 

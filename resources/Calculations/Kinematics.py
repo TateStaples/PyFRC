@@ -1,5 +1,6 @@
 import time
 from resources.Calculations.math_utils import *
+from resources.Interfaces.Motors import MotorController
 
 
 class PID:
@@ -75,16 +76,26 @@ class PID:
 
 
 class Feedforward:
+    '''
+    A standard bad feedforward
+    '''
     def __init__(self, ks, kv, ka=0):
         self.ks, self.kv, self.ka = ks, kv, ka
 
     def __call__(self, vel, acc=0):
-        return self.ks + vel*self.kv + acc*self.ka  # i have no evidence this works
+        return self.estimate(vel, acc)
+
+    def estimate(self, vel, acc=0):
+        return self.ks + vel * self.kv + acc * self.ka  # i have no evidence this works
 
 
 class DriveController:
-    def __init__(self, left_control, right_control):
-        pass
+    '''
+    A class to drive a West-Coast drivetrain
+    '''
+    def __init__(self, left_control: MotorController, right_control: MotorController):
+        self.left = left_control
+        self
 
     def arcade_drive(self, speed, rotation, square_inputs=True):
         if square_inputs:
@@ -107,10 +118,12 @@ class DriveController:
             else:
                 left_speed = max_input
                 right_speed = speed - rotation
-        # todo implement motor control set
+        self.left.speed = left_speed
+        self.right.speed = right_speed
 
     def tank_drive(self, left_speed, right_speed):
-        pass
+        self.left.speed = left_speed
+        self.right.speed = right_speed
 
 
 class Ramsete:  # https://github.com/wpilibsuite/allwpilib/blob/master/wpilibNewCommands/src/main/java/edu/wpi/first/wpilibj2/command/RamseteCommand.java

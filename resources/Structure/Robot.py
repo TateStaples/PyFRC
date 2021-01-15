@@ -4,23 +4,27 @@ from threading import Thread
 
 
 class Robot:
+    """
+    Python implementaion of an FRC robot.
+    Listens for updates and calls relevent periodic functions
+    """
     _auto = False
     _teleop = False
     _running = True
     _subsystems = []
 
     def __init__(self):
-        self._client = Messenger()  # establish wifi connection
+        self.messenger = Messenger()  # establish wifi connection
         self._setup_listeners()  # allow user to send commands
         self.robot_init()  # call overwrittable function
         resources.configs.main_robot = self
 
     # setup listeners for when to trigger events
     def _setup_listeners(self):
-        self._client.on_receive("enable", self._begin)
-        self._client.on_receive("disable", self._stop)
-        self._client.on_receive("auto", self._begin_auto)
-        self._client.on_receive("teleop", self._begin_teleop)
+        self.messenger.on_receive("enable", self._begin)
+        self.messenger.on_receive("disable", self._stop)
+        self.messenger.on_receive("auto", self._begin_auto)
+        self.messenger.on_receive("teleop", self._begin_teleop)
 
     # main loop threads
     def _loops(self):

@@ -4,6 +4,9 @@ import time
 
 
 class Pose:
+    '''
+    Data type to represent: position (x, y) and rotation (theta)
+    '''
     def __init__(self, x, y, theta):
         self.x, self.y, self.theta = x, y, theta
         self.x_vel, self.y_vel, self.theta_vel = 0, 0, 0
@@ -16,6 +19,9 @@ class Pose:
 
 
 class Odometry:  # https://github.com/merose/diff_drive/blob/master/src/diff_drive/odometry.py
+    '''
+    Differential Odomentry: tracks a west-coast robot
+    '''
     def __init__(self, track_width, pose=(0, 0, 0)):
         self.track_width = track_width
         self.pose = Pose(*pose)
@@ -64,6 +70,9 @@ class Odometry:  # https://github.com/merose/diff_drive/blob/master/src/diff_dri
 
 
 class Gyro:  # todo: find a way to do this
+    '''
+    Wrapper class for a gyroscope
+    '''
     @property
     def heading(self):
         return 0

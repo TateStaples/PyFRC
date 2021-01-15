@@ -1,4 +1,11 @@
+from resources.configs import main_robot
+
+
 class Button:
+    '''
+    A boolean wrapper class that can hold a bool or bool function
+    Includes listener for press / release
+    '''
     def __init__(self, val=False):
         self.value = val
         self._click = []
@@ -28,6 +35,9 @@ class Button:
 
 
 class Axis:
+    '''
+    A float wrapper that can apply control configs to allow for more sensitive controls
+    '''
     def __init__(self, val=0.0):
         self.rate = 1
         self.expo = 0
@@ -52,9 +62,12 @@ class Axis:
 
 
 class Controller:
+    '''
+    Abstract class for any type of controller using Axes and Buttons
+    '''
     def __init__(self, number):
         self.name = "Controller" + number
-        self.inputs = dict()
+        main_robot.messenger.on_receive(self.name, )
 
     def _update(self, new_vals):  # passes a dictionary
         for input in new_vals:
@@ -68,6 +81,9 @@ class Controller:
 
 
 class XboxController(Controller):
+    '''
+    Controller that is setup with Xbox buttons and axes
+    '''
     def __init__(self, number):
         super(XboxController, self).__init__(number)
         buttons = ['a', 'x', 'y', 'b',
@@ -75,11 +91,11 @@ class XboxController(Controller):
                    'guide', 'back', 'start'
                    'up', 'down', 'left', 'right'
         ]
-        axises = [
+        axes = [
             "leftX", "leftY", "rightX", "rightY",
             "leftTrigger", "rightTrigger"
         ]
         for b in buttons:
             self.__setattr__(b, Button())
-        for a in axises:
-            self.__setattr__(a, Axis)
+        for a in axes:
+            self.__setattr__(a, Axis())

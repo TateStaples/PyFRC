@@ -1,4 +1,7 @@
 class Interpolator:
+    """
+    Why do math when you can guess and check
+    """
     def __init__(self, dictionary):
         self.dictionary = dictionary
 
